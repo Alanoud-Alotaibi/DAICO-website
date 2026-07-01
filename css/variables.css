@@ -4,6 +4,17 @@
   /* Font Family - Tajawal for Arabic (primary), Inter for numbers/UI */
   --font-family: 'Tajawal', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   
+  /* ================================================================
+     DISPLAY TYPOGRAPHY SCALE — (brief §3: push the type system further)
+     ================================================================ */
+  --display-xl: clamp(2.5rem, 6vw, 4rem);
+  --display-lg: 2.25rem;
+  --display-md: 1.75rem;
+  --display-sm: 1.25rem;
+  --weight-black: 900;
+  --weight-extrabold: 800;
+  --weight-bold: 700;
+
   /* Spacing Grid */
   --space-xs: 0.25rem;
   --space-sm: 0.5rem;
@@ -20,10 +31,69 @@
   --radius-xl: 24px;
   --radius-full: 9999px;
 
-  /* Transitions */
+  /* Transitions — (brief §5: standardize on cubic-bezier(0.16,1,0.3,1)) */
   --transition-fast: 0.15s cubic-bezier(0.16, 1, 0.3, 1);
   --transition-normal: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   --transition-slow: 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* ================================================================
+     BRAND COLOR — BASE PLATFORM BLUE
+     (brief §1: "dominant UI color — same role it plays as the vessel")
+     ================================================================ */
+  --primary-hue: 199;
+  --primary-sat: 95%;
+  --primary-light: 45%;
+  --primary: hsl(var(--primary-hue), var(--primary-sat), var(--primary-light));
+  --primary-hover: hsl(var(--primary-hue), var(--primary-sat), 38%);
+  --primary-glow: hsla(var(--primary-hue), var(--primary-sat), var(--primary-light), 0.15);
+
+  /* ================================================================
+     FACET ACCENT PALETTE — Derived from the logo's 5 facet colors
+     (brief §1: "use as ACCENT PALETTE for badges, tags, charts, celebrations")
+     ================================================================ */
+  
+  /* Sky/Star Blue — "insight" facet (course badge) */
+  --facet-sky: #5EC2F6;
+  --facet-sky-deep: #2A86C7;
+  --facet-sky-glow: rgba(94, 194, 246, 0.15);
+  --facet-sky-bg: rgba(94, 194, 246, 0.10);
+
+  /* Amber/Orange — "energy" facet (bootcamp badge) */
+  --facet-amber: #FACC15;
+  --facet-amber-deep: #EA580C;
+  --facet-amber-glow: rgba(250, 204, 21, 0.15);
+  --facet-amber-bg: rgba(250, 204, 21, 0.10);
+
+  /* Lime/Green — "growth" facet (workshop badge) */
+  --facet-lime: #A3E635;
+  --facet-lime-deep: #65A30D;
+  --facet-lime-glow: rgba(163, 230, 53, 0.15);
+  --facet-lime-bg: rgba(163, 230, 53, 0.10);
+
+  /* Emerald/Teal — "completion/success" facet */
+  --facet-emerald: #10B981;
+  --facet-emerald-deep: #047857;
+  --facet-emerald-glow: rgba(16, 185, 129, 0.15);
+  --facet-emerald-bg: rgba(16, 185, 129, 0.10);
+
+  /* Red-Orange — "fire/spark" facet (hackathon badge, alerts — use sparingly) */
+  --facet-red: #F97316;
+  --facet-red-deep: #B91C1C;
+  --facet-red-glow: rgba(249, 115, 22, 0.15);
+  --facet-red-bg: rgba(249, 115, 22, 0.10);
+
+  /* ================================================================
+     PROGRAM-TYPE BADGE COLOR MAP
+     (brief §4: "course=blue, bootcamp=amber, workshop=lime, hackathon=red-orange")
+     ================================================================ */
+  --badge-course: var(--facet-sky-deep);
+  --badge-course-bg: var(--facet-sky-bg);
+  --badge-bootcamp: var(--facet-amber-deep);
+  --badge-bootcamp-bg: var(--facet-amber-bg);
+  --badge-workshop: var(--facet-lime-deep);
+  --badge-workshop-bg: var(--facet-lime-bg);
+  --badge-hackathon: var(--facet-red-deep);
+  --badge-hackathon-bg: var(--facet-red-bg);
 
   /* Light Theme Variables (Default) */
   --bg-primary: #f5f5f7;
@@ -35,14 +105,7 @@
   --border-color: rgba(0, 0, 0, 0.08);
   --border-focus: hsla(199, 95%, 45%, 0.4);
   
-  /* HSL Colors */
-  --primary-hue: 199;
-  --primary-sat: 95%;
-  --primary-light: 45%;
-  --primary: hsl(var(--primary-hue), var(--primary-sat), var(--primary-light));
-  --primary-hover: hsl(var(--primary-hue), var(--primary-sat), 38%);
-  --primary-glow: hsla(var(--primary-hue), var(--primary-sat), var(--primary-light), 0.15);
-  
+  /* Semantic Colors */
   --success: #10b981;
   --success-bg: rgba(16, 185, 129, 0.1);
   --warning: #f59e0b;
@@ -63,7 +126,9 @@
   --sidebar-w: 260px;
 }
 
-/* Dark Theme Variables Override */
+/* ================================================================
+   DARK THEME — preserves existing override pattern
+   ================================================================ */
 html[data-theme="dark"] {
   --bg-primary: #0a0b10;
   --bg-secondary: #12131a;
@@ -89,9 +154,25 @@ html[data-theme="dark"] {
   --warning-bg: rgba(245, 158, 11, 0.15);
   --danger-bg: rgba(239, 68, 68, 0.15);
   --info-bg: rgba(14, 165, 233, 0.15);
+
+  /* Facet glow intensities increase in dark mode for visibility */
+  --facet-sky-glow: rgba(94, 194, 246, 0.25);
+  --facet-amber-glow: rgba(250, 204, 21, 0.25);
+  --facet-lime-glow: rgba(163, 230, 53, 0.25);
+  --facet-emerald-glow: rgba(16, 185, 129, 0.25);
+  --facet-red-glow: rgba(249, 115, 22, 0.25);
+  --facet-sky-bg: rgba(94, 194, 246, 0.15);
+  --facet-amber-bg: rgba(250, 204, 21, 0.12);
+  --facet-lime-bg: rgba(163, 230, 53, 0.12);
+  --facet-emerald-bg: rgba(16, 185, 129, 0.15);
+  --facet-red-bg: rgba(249, 115, 22, 0.15);
 }
 
-/* Animations */
+/* ================================================================
+   ANIMATIONS
+   ================================================================ */
+
+/* Existing — preserved */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
@@ -109,4 +190,55 @@ html[data-theme="dark"] {
 
 @keyframes rotateSpinner {
   to { transform: rotate(360deg); }
+}
+
+/* NEW — Stripe-inspired slow glow drift (brief §4 HOMEPAGE) */
+@keyframes glowDrift {
+  0%   { transform: translate(0, 0) scale(1);   opacity: 0.35; }
+  25%  { transform: translate(30px, -20px) scale(1.05); opacity: 0.5; }
+  50%  { transform: translate(-15px, 15px) scale(1.1); opacity: 0.4; }
+  75%  { transform: translate(10px, 25px) scale(1.02); opacity: 0.55; }
+  100% { transform: translate(0, 0) scale(1);   opacity: 0.35; }
+}
+
+/* NEW — Staggered card/element entrance (brief §5) */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* NEW — Section title gradient shift for rhythm (brief §3) */
+@keyframes gradientShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* NEW — Toast slide-in from bottom (brief §5) */
+@keyframes toastSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) translateX(-50%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) translateX(-50%);
+  }
+}
+
+@keyframes toastSlideOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) translateX(-50%);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(20px) translateX(-50%);
+  }
 }

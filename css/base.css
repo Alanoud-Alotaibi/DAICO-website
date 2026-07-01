@@ -50,9 +50,11 @@ body {
   color: var(--primary);
 }
 
-/* Typography defaults */
+/* ================================================================
+   TYPOGRAPHY — (brief §3: increase type-weight contrast)
+   ================================================================ */
 h1, h2, h3, h4, h5, h6 {
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   line-height: 1.25;
   letter-spacing: -0.02em;
 }
@@ -67,7 +69,11 @@ a:hover {
   color: var(--primary-hover);
 }
 
-/* Button UI Components */
+/* ================================================================
+   BUTTON UI COMPONENTS
+   (brief §5: "subtle scale-down on press, glow-lift on hover —
+   apply uniformly to every interactive component")
+   ================================================================ */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -85,20 +91,22 @@ a:hover {
   transition: all var(--transition-fast);
 }
 
+/* Uniform press effect — (brief §5: "scale-down on press") */
+.btn:active {
+  transform: scale(0.97) !important;
+}
+
 .btn-primary {
   background-color: var(--primary);
   color: #ffffff;
 }
 
+/* (brief §5: "glow-lift on hover — apply uniformly") */
 .btn-primary:hover {
   background-color: var(--primary-hover);
   color: #ffffff;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px var(--primary-glow);
-}
-
-.btn-primary:active {
-  transform: translateY(0);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px var(--primary-glow), 0 2px 6px rgba(0,0,0,0.08);
 }
 
 .btn-secondary {
@@ -110,6 +118,21 @@ a:hover {
 .btn-secondary:hover {
   background-color: var(--bg-primary);
   border-color: var(--text-muted);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Ghost/Outline button — (brief §4 HOMEPAGE: "secondary CTA ghost/outline") */
+.btn-ghost {
+  background-color: transparent;
+  color: var(--primary);
+  border: 1.5px solid var(--primary);
+}
+
+.btn-ghost:hover {
+  background-color: var(--primary-glow);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px var(--primary-glow);
 }
 
 .btn-danger {
@@ -119,8 +142,8 @@ a:hover {
 
 .btn-danger:hover {
   background-color: #dc2626;
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
-  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.2);
+  transform: translateY(-2px);
 }
 
 .btn-sm {
@@ -129,7 +152,9 @@ a:hover {
   border-radius: var(--radius-sm);
 }
 
-/* Inputs & Form Controls */
+/* ================================================================
+   INPUTS & FORM CONTROLS
+   ================================================================ */
 .form-group {
   margin-bottom: var(--space-md);
   display: flex;
@@ -164,7 +189,9 @@ a:hover {
   color: var(--text-muted);
 }
 
-/* Cards (Stripe-like) */
+/* ================================================================
+   CARDS (Stripe-like)
+   ================================================================ */
 .card {
   background-color: var(--bg-secondary);
   border: 1px solid var(--border-color);
@@ -174,16 +201,20 @@ a:hover {
   transition: transform var(--transition-normal), box-shadow var(--transition-normal), border-color var(--transition-normal);
 }
 
+/* (brief §5: uniform hover lift) — replaced hardcoded blue with theme token */
 .card:hover {
   transform: translateY(-4px);
   box-shadow: var(--shadow-md);
-  border-color: rgba(37, 99, 235, 0.15);
+  border-color: var(--primary-glow);
 }
 
-/* Status Badges */
+/* ================================================================
+   STATUS BADGES — Semantic
+   ================================================================ */
 .badge {
   display: inline-flex;
   align-items: center;
+  gap: 4px;
   padding: 0.25rem 0.625rem;
   font-size: 0.75rem;
   font-weight: 600;
@@ -195,7 +226,31 @@ a:hover {
 .badge-danger { background-color: var(--danger-bg); color: var(--danger); }
 .badge-info { background-color: var(--info-bg); color: var(--info); }
 
-/* Utilities */
+/* ================================================================
+   PROGRAM-TYPE BADGES — facet-color coded
+   (brief §4: "course=blue-star, bootcamp=amber, workshop=lime, hackathon=red-orange
+   — this becomes a wayfinding system used consistently site-wide")
+   ================================================================ */
+.badge-course {
+  background-color: var(--badge-course-bg);
+  color: var(--badge-course);
+}
+.badge-bootcamp {
+  background-color: var(--badge-bootcamp-bg);
+  color: var(--badge-bootcamp);
+}
+.badge-workshop {
+  background-color: var(--badge-workshop-bg);
+  color: var(--badge-workshop);
+}
+.badge-hackathon {
+  background-color: var(--badge-hackathon-bg);
+  color: var(--badge-hackathon);
+}
+
+/* ================================================================
+   UTILITIES
+   ================================================================ */
 .text-center { text-align: center; }
 .flex { display: flex; }
 .align-center { align-items: center; }
@@ -204,7 +259,9 @@ a:hover {
 .gap-md { gap: var(--space-md); }
 .w-full { width: 100%; }
 
-/* Header/Nav Global Theme Toggle */
+/* ================================================================
+   HEADER/NAV THEME TOGGLE
+   ================================================================ */
 .theme-toggle {
   background: none;
   border: 1px solid var(--border-color);
@@ -221,9 +278,16 @@ a:hover {
 .theme-toggle:hover {
   background-color: var(--bg-tertiary);
   border-color: var(--text-muted);
+  transform: translateY(-1px);
 }
 
-/* Modal reset */
+.theme-toggle:active {
+  transform: scale(0.95);
+}
+
+/* ================================================================
+   MODAL SYSTEM
+   ================================================================ */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -259,4 +323,99 @@ a:hover {
 
 .modal-overlay.active .modal-content {
   transform: scale(1);
+}
+
+/* ================================================================
+   TOAST NOTIFICATION SYSTEM — replaces static alerts for transient feedback
+   (brief §5: "Toasts replace static alert divs for transient feedback;
+   persistent alerts (form validation) stay inline")
+   ================================================================ */
+.toast-container {
+  position: fixed;
+  bottom: var(--space-xl);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  pointer-events: none;
+}
+
+.toast {
+  pointer-events: auto;
+  min-width: 300px;
+  max-width: 500px;
+  padding: 0.85rem 1.5rem;
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  box-shadow: var(--shadow-lg);
+  animation: toastSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  backdrop-filter: blur(12px);
+}
+
+.toast.toast-exit {
+  animation: toastSlideOut 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.toast-success {
+  background-color: rgba(16, 185, 129, 0.95);
+  color: #ffffff;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.toast-error {
+  background-color: rgba(239, 68, 68, 0.95);
+  color: #ffffff;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.toast-info {
+  background-color: rgba(14, 165, 233, 0.95);
+  color: #ffffff;
+  border: 1px solid rgba(14, 165, 233, 0.3);
+}
+
+/* ================================================================
+   STAGGERED ENTRANCE — applied via .animate-in class
+   (brief §5: "staggered fade-up for card grids")
+   ================================================================ */
+.animate-in {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Alert Boxes — kept inline for form validation (brief §5) */
+.alert {
+  padding: 0.85rem 1.25rem;
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  animation: fadeIn 0.3s ease;
+}
+
+.alert-success {
+  background-color: var(--success-bg);
+  color: var(--success);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.alert-danger {
+  background-color: var(--danger-bg);
+  color: var(--danger);
+  border: 1px solid rgba(239, 68, 68, 0.2);
 }

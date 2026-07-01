@@ -1,4 +1,8 @@
-/* Authentication Pages Styling */
+/* ================================================================
+   AUTHENTICATION PAGES STYLING
+   (brief §4 AUTH: "branded glow using two different facet colors
+   so auth pages feel branded, not templated")
+   ================================================================ */
 
 .auth-container {
   min-height: 100vh;
@@ -10,28 +14,47 @@
   overflow: hidden;
 }
 
+/* Glow 1 — Amber/Orange (energy facet) instead of generic blue */
 .auth-glow-1 {
   position: absolute;
   top: -10%;
   right: -10%;
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(37, 99, 235, 0.1) 0%, rgba(255,255,255,0) 70%);
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle, var(--facet-amber-glow) 0%, rgba(255,255,255,0) 70%);
   border-radius: var(--radius-full);
   z-index: -1;
-  animation: pulseGlow 10s infinite;
+  animation: glowDrift 14s ease-in-out infinite;
+  filter: blur(55px);
 }
 
+/* Glow 2 — Emerald/Teal (completion facet) instead of generic purple */
 .auth-glow-2 {
   position: absolute;
   bottom: -10%;
   left: -10%;
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(168, 85, 247, 0.08) 0%, rgba(255,255,255,0) 70%);
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle, var(--facet-emerald-glow) 0%, rgba(255,255,255,0) 70%);
   border-radius: var(--radius-full);
   z-index: -1;
-  animation: pulseGlow 12s infinite alternate;
+  animation: glowDrift 18s ease-in-out infinite reverse;
+  filter: blur(60px);
+}
+
+/* Optional third glow for extra depth */
+.auth-glow-3 {
+  position: absolute;
+  top: 40%;
+  left: 30%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, var(--facet-sky-glow) 0%, rgba(255,255,255,0) 70%);
+  border-radius: var(--radius-full);
+  z-index: -1;
+  animation: glowDrift 20s ease-in-out infinite;
+  animation-delay: -5s;
+  filter: blur(65px);
 }
 
 .auth-card {
@@ -60,7 +83,7 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-sm);
-  font-weight: 800;
+  font-weight: var(--weight-extrabold);
   font-size: 1.75rem;
   color: var(--primary);
   margin-bottom: var(--space-sm);
@@ -68,7 +91,7 @@
 
 .auth-title {
   font-size: 1.5rem;
-  font-weight: 800;
+  font-weight: var(--weight-extrabold);
   color: var(--text-primary);
 }
 
@@ -110,31 +133,80 @@
 }
 
 .auth-links a {
-  font-weight: 700;
+  font-weight: var(--weight-bold);
 }
 
-/* Alert Boxes */
-.alert {
-  padding: 0.85rem 1.25rem;
-  border-radius: var(--radius-md);
-  font-size: 0.875rem;
-  font-weight: 500;
+/* ================================================================
+   REGISTRATION PROGRESS INDICATOR
+   (brief §4 AUTH: "animated progress indicator across register → verify
+   to show the user where they are in onboarding")
+   ================================================================ */
+.auth-progress {
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
-  animation: fadeIn 0.3s ease;
+  justify-content: center;
+  gap: 0;
+  margin-bottom: var(--space-md);
 }
 
-.alert-success {
-  background-color: var(--success-bg);
-  color: var(--success);
-  border: 1px solid rgba(16, 185, 129, 0.2);
+.auth-progress-step {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  transition: color var(--transition-fast);
 }
 
-.alert-danger {
-  background-color: var(--danger-bg);
-  color: var(--danger);
-  border: 1px solid rgba(239, 68, 68, 0.2);
+.auth-progress-step.active {
+  color: var(--primary);
+}
+
+.auth-progress-step.completed {
+  color: var(--facet-emerald);
+}
+
+.auth-progress-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: var(--weight-bold);
+  border: 2px solid var(--border-color);
+  background: var(--bg-tertiary);
+  transition: all var(--transition-fast);
+}
+
+.auth-progress-step.active .auth-progress-dot {
+  border-color: var(--primary);
+  background: var(--primary-glow);
+  color: var(--primary);
+}
+
+.auth-progress-step.completed .auth-progress-dot {
+  border-color: var(--facet-emerald);
+  background: var(--facet-emerald-bg);
+  color: var(--facet-emerald);
+}
+
+.auth-progress-line {
+  width: 40px;
+  height: 2px;
+  background: var(--border-color);
+  margin: 0 var(--space-xs);
+  transition: background var(--transition-fast);
+}
+
+.auth-progress-line.active {
+  background: var(--primary);
+}
+
+.auth-progress-line.completed {
+  background: var(--facet-emerald);
 }
 
 /* Email Verification Pin Input style */
@@ -147,13 +219,13 @@
 }
 
 .pin-input {
-  width: 50px;
-  height: 50px;
+  width: 52px;
+  height: 52px;
   text-align: center;
   font-size: 1.5rem;
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   border-radius: var(--radius-md);
-  border: 1px solid var(--border-color);
+  border: 1.5px solid var(--border-color);
   background-color: var(--bg-tertiary);
   color: var(--text-primary);
   outline: none;

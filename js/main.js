@@ -1,20 +1,24 @@
 /**
  * DAICO Homepage Controller
+ * Enhanced with: animated count-up, staggered card entrance,
+ * program-type badge facet coloring, toast notifications
  */
 
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
   initMobileMenu();
-  initHeaderAuth();
   loadFeaturedPrograms('all');
   initFilterTabs();
   initStats();
   initTestimonials();
   initFAQs();
   initContactForm();
+  initScrollAnimations();
 });
 
-// Theme Management (Light / Dark Mode)
+// ================================================================
+// THEME MANAGEMENT (Light / Dark Mode)
+// ================================================================
 function initTheme() {
   const toggleBtn = document.getElementById('theme-toggle');
   if (!toggleBtn) return;
@@ -33,13 +37,15 @@ function initTheme() {
 
 function updateThemeIcon(btn, theme) {
   if (theme === 'dark') {
-    btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></svg>`;
+    btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
   } else {
     btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
   }
 }
 
-// Mobile Menu Handler
+// ================================================================
+// MOBILE MENU HANDLER
+// ================================================================
 function initMobileMenu() {
   const btn = document.getElementById('mobile-menu-btn');
   const menu = document.getElementById('nav-menu');
@@ -63,7 +69,10 @@ function initMobileMenu() {
   });
 }
 
-// Featured Programs Card Renderer
+// ================================================================
+// FEATURED PROGRAMS — Card Renderer with facet badge coloring
+// (brief §4: "program-type badge uses its assigned facet color")
+// ================================================================
 function loadFeaturedPrograms(typeFilter = 'all') {
   const container = document.getElementById('programs-container');
   if (!container) return;
@@ -83,7 +92,7 @@ function loadFeaturedPrograms(typeFilter = 'all') {
     return;
   }
 
-  container.innerHTML = events.map(event => {
+  container.innerHTML = events.map((event, index) => {
     const trainer = window.DAICO_DB.selectOne('trainers', { id: event.trainer_id }) || { name: 'دايكو للتدريب', title: 'خبير تدريب' };
     const category = window.DAICO_DB.selectOne('categories', { id: event.category_id }) || { name_ar: 'عام' };
     
@@ -94,20 +103,13 @@ function loadFeaturedPrograms(typeFilter = 'all') {
     const priceLabel = event.price > 0 ? `${event.price} ريال` : 'مجانًا';
     const priceClass = event.price > 0 ? 'badge-warning' : 'badge-success';
 
-    let btnLink = 'auth/login.html';
-    const currentUser = window.DAICO_AUTH ? window.DAICO_AUTH.getCurrentUser() : null;
-    if (currentUser) {
-      if (currentUser.role === 'admin' || currentUser.role === 'super_admin') {
-        btnLink = 'admin/index.html';
-      } else {
-        btnLink = `user/index.html?event_id=${event.id}`;
-      }
-    }
+    // Staggered entrance delay (brief §5)
+    const delay = index * 0.08;
 
     return `
-      <div class="card program-card">
+      <div class="card program-card animate-in" style="transition-delay: ${delay}s">
         <img class="program-image" src="${event.cover_image}" alt="${event.title}">
-        <span class="program-badge-tag">${typeLabel}</span>
+        <span class="program-badge-tag" data-type="${event.type}">${typeLabel}</span>
         
         <div class="program-card-body">
           <div class="program-meta">
@@ -133,14 +135,22 @@ function loadFeaturedPrograms(typeFilter = 'all') {
             </div>
           </div>
           
-          <a href="${btnLink}" class="btn btn-primary btn-sm" style="margin-top: var(--space-md)">تفاصيل البرنامج وتسجيل</a>
+          <a href="auth/login.html" class="btn btn-primary btn-sm" style="margin-top: var(--space-md)">تفاصيل البرنامج وتسجيل</a>
         </div>
       </div>
     `;
   }).join('');
+
+  // Trigger entrance animation after render
+  requestAnimationFrame(() => {
+    const cards = container.querySelectorAll('.animate-in');
+    cards.forEach(card => card.classList.add('visible'));
+  });
 }
 
-// Filter Tabs Click Events
+// ================================================================
+// FILTER TABS — Click Events
+// ================================================================
 function initFilterTabs() {
   const tabs = document.querySelectorAll('.filter-tab');
   tabs.forEach(tab => {
@@ -153,26 +163,140 @@ function initFilterTabs() {
   });
 }
 
-// Populate stats numbers
+// ================================================================
+// STATS — Animated count-up using IntersectionObserver
+// (brief §4 HOMEPAGE: "animated count-up, icons in facet colors")
+// ================================================================
 function initStats() {
-  const stats = window.DAICO_DB.selectOne('homepage', { section_name: 'homepage_data' });
-  if (!stats) return;
-
-  const data = stats.content_data.stats;
-  const nodes = {
-    'stat-students': data.students,
-    'stat-courses': data.courses,
-    'stat-trainers': data.trainers,
-    'stat-employment': data.employment_rate
+  const stats = window.DAICO_DB ? window.DAICO_DB.selectOne('homepage', { section_name: 'homepage_data' }) : null;
+  
+  // Get elements
+  const statElements = {
+    'stat-students': { suffix: '+' },
+    'stat-courses': { suffix: '+' },
+    'stat-trainers': { suffix: '+' },
+    'stat-employment': { suffix: '%' }
   };
 
-  for (let id in nodes) {
-    const el = document.getElementById(id);
-    if (el) el.innerText = nodes[id];
+  // Set target values from DB or fallback
+  if (stats) {
+    const data = stats.content_data.stats;
+    setStatTarget('stat-students', data.students);
+    setStatTarget('stat-courses', data.courses);
+    setStatTarget('stat-trainers', data.trainers);
+    setStatTarget('stat-employment', data.employment_rate);
   }
+
+  // Use IntersectionObserver for count-up on scroll
+  const statsSection = document.querySelector('.stats-section');
+  if (!statsSection) return;
+
+  let hasAnimated = false;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !hasAnimated) {
+        hasAnimated = true;
+        animateAllStats();
+      }
+    });
+  }, { threshold: 0.3 });
+
+  observer.observe(statsSection);
 }
 
-// Testimonials Slider Logic
+function setStatTarget(id, rawValue) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  
+  // Parse the raw value (e.g., "12,500+" → 12500, "94%" → 94)
+  const cleanValue = String(rawValue).replace(/[^0-9.]/g, '');
+  const numericValue = parseFloat(cleanValue) || 0;
+  
+  // Store the original display format and numeric target
+  el.setAttribute('data-target', numericValue);
+  el.setAttribute('data-raw', rawValue);
+}
+
+function animateAllStats() {
+  const statNumbers = document.querySelectorAll('.stat-number');
+  statNumbers.forEach(el => {
+    const target = parseFloat(el.getAttribute('data-target')) || 0;
+    const rawValue = el.getAttribute('data-raw') || '';
+    
+    if (target === 0 && rawValue) {
+      // If we have raw but no numeric target, just display raw
+      el.innerText = rawValue;
+      return;
+    }
+    
+    animateCountUp(el, target, rawValue);
+  });
+}
+
+function animateCountUp(element, target, rawFormat) {
+  const duration = 2000; // 2 seconds
+  const startTime = performance.now();
+  const isPercentage = rawFormat.includes('%');
+  const hasPlus = rawFormat.includes('+');
+  const hasComma = rawFormat.includes(',');
+  
+  function update(currentTime) {
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    
+    // Ease-out cubic
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const currentValue = Math.floor(eased * target);
+    
+    // Format the number
+    let display = hasComma 
+      ? currentValue.toLocaleString('en-US') 
+      : String(currentValue);
+    
+    if (hasPlus) display += '+';
+    if (isPercentage) display += '%';
+    
+    element.innerText = display;
+    
+    if (progress < 1) {
+      requestAnimationFrame(update);
+    } else {
+      // Final value — use the raw format for accuracy
+      element.innerText = rawFormat;
+    }
+  }
+  
+  requestAnimationFrame(update);
+}
+
+// ================================================================
+// SCROLL ANIMATIONS — Staggered entrance via IntersectionObserver
+// (brief §5: "staggered fade-up for card grids")
+// ================================================================
+function initScrollAnimations() {
+  const animateElements = document.querySelectorAll('.animate-in');
+  
+  if (animateElements.length === 0) return;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { 
+    threshold: 0.1,
+    rootMargin: '0px 0px -40px 0px'
+  });
+
+  animateElements.forEach(el => observer.observe(el));
+}
+
+// ================================================================
+// TESTIMONIALS SLIDER
+// ================================================================
 function initTestimonials() {
   const slides = document.querySelectorAll('.testimonial-slide');
   if (slides.length === 0) return;
@@ -191,7 +315,9 @@ function initTestimonials() {
   }, 6000);
 }
 
-// FAQ Accordion click
+// ================================================================
+// FAQ ACCORDION
+// ================================================================
 function initFAQs() {
   const faqItems = document.querySelectorAll('.faq-item');
   faqItems.forEach(item => {
@@ -206,7 +332,9 @@ function initFAQs() {
   });
 }
 
-// Contact Form handler
+// ================================================================
+// CONTACT FORM — with toast notification
+// ================================================================
 function initContactForm() {
   const form = document.getElementById('contact-form');
   const alertContainer = document.getElementById('contact-alert-container');
@@ -224,12 +352,15 @@ function initContactForm() {
       return;
     }
 
-    // Success response
-    showAlert(alertContainer, 'success', 'نشكرك على تواصلك معنا! تم إرسال رسالتك وسيتصل بك أحد ممثلي دايكو قريباً.');
+    // Show toast for success (brief §5: toasts for transient feedback)
+    showToast('success', 'نشكرك على تواصلك معنا! تم إرسال رسالتك وسيتصل بك أحد ممثلي دايكو قريباً.');
     form.reset();
   });
 }
 
+// ================================================================
+// ALERT UTILITY — Inline alerts for form validation
+// ================================================================
 function showAlert(container, type, message) {
   container.innerHTML = `
     <div class="alert alert-${type}">
@@ -244,40 +375,35 @@ function showAlert(container, type, message) {
   }, 6000);
 }
 
-function initHeaderAuth() {
-  const user = window.DAICO_AUTH ? window.DAICO_AUTH.getCurrentUser() : null;
-  const navActions = document.querySelector('.nav-actions');
-  if (!navActions || !user) return;
-
-  // Remove existing Login & Register static buttons
-  const loginBtn = navActions.querySelector('a[href="auth/login.html"]');
-  const registerBtn = navActions.querySelector('a[href="auth/register.html"]');
-  
-  if (loginBtn) loginBtn.remove();
-  if (registerBtn) registerBtn.remove();
-  
-  const dashboardPath = (user.role === 'admin' || user.role === 'super_admin') ? 'admin/index.html' : 'user/index.html';
-  
-  const dashboardBtn = document.createElement('a');
-  dashboardBtn.href = dashboardPath;
-  dashboardBtn.className = 'btn btn-primary btn-sm';
-  dashboardBtn.style.fontWeight = '700';
-  dashboardBtn.innerText = 'لوحة التحكم';
-  
-  const logoutBtn = document.createElement('button');
-  logoutBtn.className = 'btn btn-secondary btn-sm';
-  logoutBtn.style.fontWeight = '700';
-  logoutBtn.innerText = 'تسجيل الخروج';
-  logoutBtn.addEventListener('click', () => {
-    window.DAICO_AUTH.logout();
-  });
-
-  const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-  if (mobileMenuBtn) {
-    navActions.insertBefore(dashboardBtn, mobileMenuBtn);
-    navActions.insertBefore(logoutBtn, mobileMenuBtn);
-  } else {
-    navActions.appendChild(dashboardBtn);
-    navActions.appendChild(logoutBtn);
+// ================================================================
+// TOAST NOTIFICATION UTILITY — Transient feedback
+// (brief §5: "Toasts replace static alert divs for transient feedback")
+// ================================================================
+function showToast(type, message, duration = 5000) {
+  let container = document.getElementById('toast-container');
+  if (!container) {
+    container = document.createElement('div');
+    container.className = 'toast-container';
+    container.id = 'toast-container';
+    document.body.appendChild(container);
   }
+
+  const toast = document.createElement('div');
+  toast.className = `toast toast-${type}`;
+  
+  const icon = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
+  toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
+  
+  container.appendChild(toast);
+
+  // Auto-dismiss
+  setTimeout(() => {
+    toast.classList.add('toast-exit');
+    setTimeout(() => {
+      if (toast.parentNode) toast.parentNode.removeChild(toast);
+    }, 300);
+  }, duration);
 }
+
+// Make toast available globally
+window.DAICO_TOAST = showToast;

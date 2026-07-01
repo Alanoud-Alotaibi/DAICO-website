@@ -1,4 +1,6 @@
-/* Dashboards Layout & Components (Admin + User) */
+/* ================================================================
+   DASHBOARDS LAYOUT & COMPONENTS (Admin + User)
+   ================================================================ */
 
 .dashboard-layout {
   display: flex;
@@ -6,7 +8,11 @@
   position: relative;
 }
 
-/* Dashboard Sidebar (Notion-like) - On the right side for RTL */
+/* ================================================================
+   SIDEBAR (Notion-like) — RTL: right side
+   (brief §4 USER DASHBOARD: "replace emoji icons with consistent line-icon set;
+   active state uses base blue")
+   ================================================================ */
 .sidebar {
   width: var(--sidebar-w);
   background-color: var(--bg-secondary);
@@ -26,7 +32,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-sm);
-  font-weight: 800;
+  font-weight: var(--weight-extrabold);
   font-size: 1.35rem;
   color: var(--primary);
 }
@@ -62,7 +68,27 @@
 .sidebar-link.active {
   background-color: var(--primary-glow);
   color: var(--primary);
-  font-weight: 700;
+  font-weight: var(--weight-bold);
+}
+
+/* Sidebar link icon container — consistent sizing for SVG line icons */
+.sidebar-link-icon {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sidebar-link-icon svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .sidebar-footer {
@@ -94,7 +120,7 @@
 
 .sidebar-user-name {
   font-size: 0.875rem;
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   color: var(--text-primary);
   white-space: nowrap;
   overflow: hidden;
@@ -106,12 +132,14 @@
   color: var(--text-muted);
 }
 
-/* Dashboard Main Content Area */
+/* ================================================================
+   MAIN CONTENT AREA
+   ================================================================ */
 .main-content {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  min-width: 0; /* Prevents flex items from overflowing */
+  min-width: 0;
   background-color: var(--bg-primary);
 }
 
@@ -135,7 +163,7 @@
 
 .dashboard-search-input {
   width: 100%;
-  padding: 0.6rem 2.5rem 0.6rem 1rem; /* Right padding for icon in RTL */
+  padding: 0.6rem 2.5rem 0.6rem 1rem;
   border-radius: var(--radius-md);
   border: 1px solid var(--border-color);
   background-color: var(--bg-primary);
@@ -179,6 +207,7 @@
 
 .notification-bell-btn:hover {
   background-color: var(--bg-tertiary);
+  transform: translateY(-1px);
 }
 
 .notification-badge {
@@ -188,7 +217,7 @@
   background-color: var(--danger);
   color: #ffffff;
   font-size: 0.65rem;
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   width: 16px;
   height: 16px;
   border-radius: var(--radius-full);
@@ -198,7 +227,9 @@
   border: 2px solid var(--bg-secondary);
 }
 
-/* Dashboard Body Container */
+/* ================================================================
+   DASHBOARD BODY
+   ================================================================ */
 .dashboard-body {
   padding: var(--space-xl);
   flex-grow: 1;
@@ -211,8 +242,8 @@
 }
 
 .dashboard-section-title {
-  font-size: 1.75rem;
-  font-weight: 800;
+  font-size: var(--display-md);
+  font-weight: var(--weight-extrabold);
   margin-bottom: var(--space-xs);
 }
 
@@ -221,7 +252,11 @@
   font-size: 0.95rem;
 }
 
-/* Analytics Cards Grid */
+/* ================================================================
+   ANALYTICS CARDS — Facet-colored icons
+   (brief §4 ADMIN: "give each metric an icon in a rotating facet color
+   so the dashboard doesn't read as monochrome")
+   ================================================================ */
 .analytics-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -249,14 +284,17 @@
 
 .analytics-value {
   font-size: 1.85rem;
-  font-weight: 900;
+  font-weight: var(--weight-black);
   color: var(--text-primary);
   line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+  direction: ltr;
+  display: inline-block;
 }
 
 .analytics-trend {
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   display: inline-flex;
   align-items: center;
   gap: 2px;
@@ -269,14 +307,117 @@
   width: 48px;
   height: 48px;
   border-radius: var(--radius-md);
-  background-color: var(--primary-glow);
-  color: var(--primary);
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: transform var(--transition-fast);
 }
 
-/* Dashboard Tables */
+.analytics-icon:hover {
+  transform: scale(1.05);
+}
+
+/* Default icon color */
+.analytics-icon {
+  background-color: var(--primary-glow);
+  color: var(--primary);
+}
+
+/* Facet-colored analytics icon variants (brief §4 ADMIN) */
+.analytics-icon.facet-sky {
+  background-color: var(--facet-sky-bg);
+  color: var(--facet-sky-deep);
+}
+.analytics-icon.facet-amber {
+  background-color: var(--facet-amber-bg);
+  color: var(--facet-amber-deep);
+}
+.analytics-icon.facet-lime {
+  background-color: var(--facet-lime-bg);
+  color: var(--facet-lime-deep);
+}
+.analytics-icon.facet-emerald {
+  background-color: var(--facet-emerald-bg);
+  color: var(--facet-emerald-deep);
+}
+.analytics-icon.facet-red {
+  background-color: var(--facet-red-bg);
+  color: var(--facet-red-deep);
+}
+
+/* ================================================================
+   CSS-ONLY BAR CHART — Monthly registrations using facet palette
+   (brief §4 ADMIN: "at least one real chart component using
+   the facet palette as its series colors")
+   ================================================================ */
+.chart-container {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-sm);
+}
+
+.chart-title {
+  font-size: 1.15rem;
+  font-weight: var(--weight-bold);
+  margin-bottom: var(--space-lg);
+}
+
+.bar-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-sm);
+  height: 180px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: var(--space-sm);
+}
+
+.bar-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.bar {
+  width: 100%;
+  max-width: 36px;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  transition: height 1s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  min-height: 4px;
+}
+
+.bar:hover {
+  filter: brightness(1.1);
+}
+
+/* Facet-colored bars */
+.bar.facet-sky     { background: linear-gradient(to top, var(--facet-sky-deep), var(--facet-sky)); }
+.bar.facet-amber   { background: linear-gradient(to top, var(--facet-amber-deep), var(--facet-amber)); }
+.bar.facet-lime    { background: linear-gradient(to top, var(--facet-lime-deep), var(--facet-lime)); }
+.bar.facet-emerald { background: linear-gradient(to top, var(--facet-emerald-deep), var(--facet-emerald)); }
+.bar.facet-red     { background: linear-gradient(to top, var(--facet-red-deep), var(--facet-red)); }
+
+.bar-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.bar-value {
+  font-size: 0.7rem;
+  font-weight: var(--weight-bold);
+  color: var(--text-secondary);
+}
+
+/* ================================================================
+   DASHBOARD TABLES
+   ================================================================ */
 .table-container {
   background-color: var(--bg-secondary);
   border: 1px solid var(--border-color);
@@ -295,7 +436,7 @@
   background-color: var(--bg-tertiary);
   padding: 1rem var(--space-lg);
   font-size: 0.85rem;
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   color: var(--text-secondary);
   border-bottom: 1px solid var(--border-color);
 }
@@ -316,7 +457,9 @@
   background-color: var(--bg-tertiary);
 }
 
-/* User Dashboard Navigation Categories */
+/* ================================================================
+   USER DASHBOARD NAVIGATION CATEGORIES
+   ================================================================ */
 .user-sections-nav {
   display: flex;
   gap: var(--space-sm);
@@ -339,16 +482,23 @@
   transition: all var(--transition-fast);
 }
 
+.user-nav-btn:hover {
+  color: var(--primary);
+  background-color: var(--primary-glow);
+}
+
 .user-nav-btn.active {
   background-color: var(--primary-glow);
   color: var(--primary);
 }
 
-/* Notifications Popover Dropdown */
+/* ================================================================
+   NOTIFICATIONS POPOVER DROPDOWN
+   ================================================================ */
 .notifications-dropdown {
   position: absolute;
   top: 60px;
-  left: 20px; /* Aligns to left side in RTL */
+  left: 20px;
   width: 320px;
   background-color: var(--bg-secondary);
   border: 1px solid var(--border-color);
@@ -367,7 +517,7 @@
 .notifications-dropdown-header {
   padding: var(--space-md);
   border-bottom: 1px solid var(--border-color);
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -402,7 +552,7 @@
 
 .notification-item-title {
   font-size: 0.85rem;
-  font-weight: 700;
+  font-weight: var(--weight-bold);
 }
 
 .notification-item-text {
@@ -415,16 +565,33 @@
   color: var(--text-muted);
 }
 
-/* Certificate Generator Box Canvas */
+/* ================================================================
+   CERTIFICATE PREVIEW — Facet gradient border
+   (brief §4 USER DASHBOARD: "full facet-color gradient border
+   referencing the logo's five facets")
+   ================================================================ */
 .certificate-preview-box {
-  border: 1px dashed var(--border-color);
   border-radius: var(--radius-lg);
   padding: var(--space-xl);
-  background-color: var(--bg-tertiary);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--space-lg);
+  position: relative;
+  background: var(--bg-tertiary);
+  /* Facet gradient border using background-clip technique */
+  border: 2px solid transparent;
+  background-image: 
+    linear-gradient(var(--bg-tertiary), var(--bg-tertiary)),
+    linear-gradient(135deg, 
+      var(--facet-sky) 0%, 
+      var(--facet-amber) 25%, 
+      var(--facet-lime) 50%, 
+      var(--facet-emerald) 75%, 
+      var(--facet-red) 100%
+    );
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
 }
 
 .certificate-canvas {
@@ -436,7 +603,9 @@
   background-color: #ffffff;
 }
 
-/* Event detailed modal parts */
+/* ================================================================
+   EVENT DETAIL MODAL PARTS
+   ================================================================ */
 .detail-grid {
   display: grid;
   grid-template-columns: 1.8fr 1.2fr;
@@ -497,7 +666,27 @@
   object-fit: cover;
 }
 
-/* Responsive Dashboards Rules */
+/* ================================================================
+   REGISTRATION STATUS BADGES — color + icon + label
+   (brief §4 USER DASHBOARD: "use color + icon + label together
+   (never color alone) across pending/approved/completed states")
+   ================================================================ */
+.status-pending {
+  color: var(--warning);
+  background-color: var(--warning-bg);
+}
+.status-approved {
+  color: var(--primary);
+  background-color: var(--primary-glow);
+}
+.status-completed {
+  color: var(--facet-emerald);
+  background-color: var(--facet-emerald-bg);
+}
+
+/* ================================================================
+   RESPONSIVE DASHBOARDS RULES
+   ================================================================ */
 @media (max-width: 992px) {
   .sidebar {
     position: fixed;
