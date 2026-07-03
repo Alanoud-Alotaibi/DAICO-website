@@ -5,6 +5,6 @@ A demo platform for DAICO management, developed during a coding workshop. This i
 
 ## Contributors
 * **Reem Alshathri (@ReemAlshathri74)**
-* **Alanoud Alotaibi (@Alanoud-Alotaibi)**
+* **Alanoud Alotaibi (@Alanoud-Alotaibi) https://github.com/Alanoud-Alotaibi**
 * **Waad Alsaif (@waadalsaif1-beep)**
 * **Hind Aldalbahi**
