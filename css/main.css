@@ -35,13 +35,15 @@ html[data-theme="dark"] .header {
   font-weight: var(--weight-extrabold);
   font-size: 1.5rem;
   color: var(--primary);
+  white-space: nowrap;
+  margin-inline-end: var(--space-lg);
 }
 
 .nav-menu {
   display: flex;
   align-items: center;
   list-style: none;
-  gap: var(--space-xl);
+  gap: var(--space-lg);
 }
 
 .nav-link {
@@ -50,6 +52,7 @@ html[data-theme="dark"] .header {
   font-size: 0.95rem;
   transition: color var(--transition-fast);
   position: relative;
+  white-space: nowrap;
 }
 
 .nav-link:hover {
@@ -78,6 +81,7 @@ html[data-theme="dark"] .header {
   display: flex;
   align-items: center;
   gap: var(--space-md);
+  margin-inline-start: var(--space-lg);
 }
 
 /* Mobile Menu Toggle Button */
@@ -263,22 +267,41 @@ html[data-theme="dark"] .header {
 }
 
 .hero-badge {
-  background-color: rgba(28, 53, 94, 0.06);
-  color: var(--sdaia-teal);
+  background-color: rgba(28, 53, 94, 0.05);
   padding: 0.5rem 1.25rem;
   border-radius: var(--radius-full);
   font-size: 0.875rem;
-  font-weight: 700;
   display: inline-flex;
   align-items: center;
   gap: var(--space-xs);
-  border: 1px solid rgba(28, 53, 94, 0.15);
+  border: 1px solid rgba(28, 53, 94, 0.12);
   animation: fadeIn 0.8s ease-out;
 }
 
+.hero-badge svg {
+  stroke: var(--primary);
+  animation: strokeShift 8s ease-in-out infinite;
+}
+
+.hero-badge span {
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--text-primary) 25%, var(--primary) 55%, var(--facet-sky) 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 8s ease-in-out infinite;
+  display: inline-block;
+}
+
 html[data-theme="dark"] .hero-badge {
-  background-color: rgba(0, 174, 141, 0.10);
-  border-color: rgba(0, 174, 141, 0.25);
+  background-color: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+@keyframes strokeShift {
+  0%, 100% { stroke: var(--primary); }
+  50% { stroke: var(--facet-sky); }
 }
 
 .hero-partners {
